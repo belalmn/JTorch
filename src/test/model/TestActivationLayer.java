@@ -54,9 +54,9 @@ public class TestActivationLayer {
     void testBackward() {
         double[][] gradientData = {{0.1, 0.2, 0.3}};
         Tensor gradientTensor = new Tensor(gradientData);
+        activationLayer.forward(inputTensor);
         Tensor inputGradient = activationLayer.backward(gradientTensor);
         assertNotNull(inputGradient);
-        // TODO: More assertions
     }
 
     @Test
