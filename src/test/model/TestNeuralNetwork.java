@@ -47,7 +47,6 @@ public class TestNeuralNetwork {
     void testPredict() {
         outputTensor = network.predict(inputTensor);
         assertNotNull(outputTensor);
-        // TODO: More assertions
     }
 
     @Test
