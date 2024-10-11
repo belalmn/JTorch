@@ -37,7 +37,6 @@ public class TestDenseLayer {
     void testForward() {
         outputTensor = denseLayer.forward(inputTensor);
         assertNotNull(outputTensor);
-        // TODO: More assertions
     }
 
     @Test
@@ -59,9 +58,9 @@ public class TestDenseLayer {
     void testBackward() {
         double[][] gradientData = {{0.1, 0.2, 0.3}};
         Tensor gradientTensor = new Tensor(gradientData);
+        denseLayer.forward(inputTensor);
         Tensor inputGradient = denseLayer.backward(gradientTensor);
         assertNotNull(inputGradient);
-        // TODO: More assertions
     }
 
     @Test
@@ -74,6 +73,14 @@ public class TestDenseLayer {
     @Test
     void testUpdateParameters() {
         Optimizer optimizer = new SGDOptimizer(0.01);
+
+        double[][] inputData = {{1.0, 2.0}};
+        Tensor inputTensor = new Tensor(inputData);
+        denseLayer.forward(inputTensor);
+        double[][] gradientData = {{0.1, 0.2, 0.3}};
+        Tensor gradientTensor = new Tensor(gradientData);
+        denseLayer.backward(gradientTensor);
+
         assertDoesNotThrow(() -> {
             denseLayer.updateParameters(optimizer);
         });
