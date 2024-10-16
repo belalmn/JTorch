@@ -5,14 +5,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class TestSGDOptimizer {
-    private SGDOptimizer optimizer;
+    private SgdOptimizer optimizer;
     private DenseLayer layer;
     private Tensor inputTensor;
     private Tensor gradientTensor;
 
     @BeforeEach
     void runBefore() {
-        optimizer = new SGDOptimizer(0.01);
+        optimizer = new SgdOptimizer(0.01);
         layer = new DenseLayer(2, 3);
 
         // Prepare input tensor
@@ -32,10 +32,10 @@ public class TestSGDOptimizer {
     @Test
     void testConstructorWithInvalidLearningRate() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new SGDOptimizer(0);
+            new SgdOptimizer(0);
         });
         assertThrows(IllegalArgumentException.class, () -> {
-            new SGDOptimizer(-0.01);
+            new SgdOptimizer(-0.01);
         });
     }
 

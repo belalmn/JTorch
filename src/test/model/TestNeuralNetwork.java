@@ -63,7 +63,7 @@ public class TestNeuralNetwork {
         inputs.add(inputTensor);
         double[][] targetData = {{1.0}};
         targets.add(new Tensor(targetData));
-        Optimizer optimizer = new SGDOptimizer(0.01);
+        Optimizer optimizer = new SgdOptimizer(0.01);
 
         assertDoesNotThrow(() -> {
             network.train(inputs, targets, 10, optimizer);
@@ -73,7 +73,7 @@ public class TestNeuralNetwork {
     @Test
     void testTrainWithNullInputs() {
         List<Tensor> targets = new ArrayList<>();
-        Optimizer optimizer = new SGDOptimizer(0.01);
+        Optimizer optimizer = new SgdOptimizer(0.01);
         assertThrows(IllegalArgumentException.class, () -> {
             network.train(null, targets, 10, optimizer);
         });
@@ -82,7 +82,7 @@ public class TestNeuralNetwork {
     @Test
     void testTrainWithNullTargets() {
         List<Tensor> inputs = new ArrayList<>();
-        Optimizer optimizer = new SGDOptimizer(0.01);
+        Optimizer optimizer = new SgdOptimizer(0.01);
         assertThrows(IllegalArgumentException.class, () -> {
             network.train(inputs, null, 10, optimizer);
         });
@@ -93,7 +93,7 @@ public class TestNeuralNetwork {
         List<Tensor> inputs = new ArrayList<>();
         List<Tensor> targets = new ArrayList<>();
         inputs.add(inputTensor);
-        Optimizer optimizer = new SGDOptimizer(0.01);
+        Optimizer optimizer = new SgdOptimizer(0.01);
         assertThrows(IllegalArgumentException.class, () -> {
             network.train(inputs, targets, 10, optimizer);
         });
@@ -105,7 +105,7 @@ public class TestNeuralNetwork {
         List<Tensor> targets = new ArrayList<>();
         inputs.add(inputTensor);
         targets.add(new Tensor(new double[][]{{1.0}}));
-        Optimizer optimizer = new SGDOptimizer(0.01);
+        Optimizer optimizer = new SgdOptimizer(0.01);
         assertThrows(IllegalArgumentException.class, () -> {
             network.train(inputs, targets, 0, optimizer);
         });

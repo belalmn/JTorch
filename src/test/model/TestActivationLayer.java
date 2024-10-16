@@ -68,7 +68,7 @@ public class TestActivationLayer {
 
     @Test
     void testUpdateParameters() {
-        Optimizer optimizer = new SGDOptimizer(0.01);
+        Optimizer optimizer = new SgdOptimizer(0.01);
         assertDoesNotThrow(() -> {
             activationLayer.updateParameters(optimizer);
         });

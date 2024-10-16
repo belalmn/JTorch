@@ -72,7 +72,7 @@ public class TestDenseLayer {
 
     @Test
     void testUpdateParameters() {
-        Optimizer optimizer = new SGDOptimizer(0.01);
+        Optimizer optimizer = new SgdOptimizer(0.01);
 
         double[][] inputData = {{1.0, 2.0}};
         Tensor inputTensor = new Tensor(inputData);
