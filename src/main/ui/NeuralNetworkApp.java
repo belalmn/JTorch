@@ -3,10 +3,8 @@ package ui;
 import model.*;
 import java.util.*;
 
-/**
- * Represents the console application for managing a neural network.
- */
-public class NeuralNetworkApp {
+// Represents the console application for managing a neural network. 
+public class NeuralNetworkApp implements TrainingListener {
 
     private Scanner scanner;
     private NeuralNetwork neuralNetwork;
@@ -54,6 +52,12 @@ public class NeuralNetworkApp {
                     System.out.println("Invalid choice. Please try again.");
             }
         }
+    }
+
+    // prints the loss per epoch
+    @Override
+    public void onEpochEnd(int epoch, int totalEpochs, double loss) {
+        System.out.println("Epoch " + epoch + "/" + totalEpochs + " - Loss: " + loss);
     }
 
     // displays the main menu
@@ -181,7 +185,7 @@ public class NeuralNetworkApp {
         if (choice == 1) {
             double learningRate = getDoubleInput("Enter learning rate: ");
             try {
-                optimizer = new SGDOptimizer(learningRate);
+                optimizer = new SgdOptimizer(learningRate);
                 System.out.println("SGD optimizer selected.");
             } catch (IllegalArgumentException e) {
                 System.out.println("Failed to create optimizer: " + e.getMessage());
@@ -220,6 +224,9 @@ public class NeuralNetworkApp {
         inputs.add(tensors.get(inputTensorName));
         List<Tensor> targets = new ArrayList<>();
         targets.add(tensors.get(targetTensorName));
+
+        // Setting neural network's listener
+        neuralNetwork.setTrainingListener(this);
 
         System.out.println("Training started...");
         try {

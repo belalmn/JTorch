@@ -7,6 +7,8 @@ import java.util.ArrayList;
 public class NeuralNetwork {
 
     private List<Layer> layers;
+    private TrainingListener trainingListener;
+
 
     // EFFECTS: initializes an empty list of layers
     public NeuralNetwork() {
@@ -24,20 +26,30 @@ public class NeuralNetwork {
     }
 
     // MODIFIES: this
+    // EFFECTS: sets the training listener
+    public void setTrainingListener(TrainingListener listener) {
+        this.trainingListener = listener;
+    }
+
+    // MODIFIES: this
     // EFFECTS: trains the network on the data for the specified number of epochs;
     // throws IllegalArgumentException if inputs or targets are null,
-    // sizes do not match, epochs <= 0, or optimizer is null
+    // sizes do not match, epochs <= 0, or optimizer is null;
+    // notifies UI of loss for each epoch throughout training
     public void train(List<Tensor> inputs, List<Tensor> targets, int epochs, Optimizer optimizer) {
         if (inputs == null || targets == null || optimizer == null || epochs <= 0 || inputs.size() != targets.size()) {
             throw new IllegalArgumentException("Invalid training parameters");
         }
         Metric metric = new Metric();
-        // List<Double> lossPerEpoch = new ArrayList<>();
         for (int epoch = 0; epoch < epochs; epoch++) {
             trainEpoch(inputs, targets, optimizer, metric);
-            // double totalLoss = trainEpoch(inputs, targets, optimizer, metric);
-            // double averageLoss = totalLoss / inputs.size();
-            // lossPerEpoch.add(averageLoss); // TODO: Add
+            double totalLoss = trainEpoch(inputs, targets, optimizer, metric);
+            double averageLoss = totalLoss / inputs.size();
+
+            // Notifies listener of new epoch and loss
+            if (trainingListener != null) {
+                trainingListener.onEpochEnd(epoch + 1, epochs, averageLoss);
+            }
         }
     }
 
