@@ -1,6 +1,8 @@
 package model;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -91,5 +93,58 @@ public class TestDenseLayer {
         assertThrows(IllegalArgumentException.class, () -> {
             denseLayer.updateParameters(null);
         });
+    }
+
+    @Test
+    public void testToJson() {
+        JSONObject json = denseLayer.toJson();
+        assertNotNull(json);
+        assertEquals("DenseLayer", json.getString("type"));
+        assertTrue(json.has("weights"));
+        assertTrue(json.has("biases"));
+    }
+
+    @Test
+    public void testFromJson() {
+        JSONObject json = denseLayer.toJson();
+        DenseLayer deserializedLayer = DenseLayer.fromJson(json);
+        assertNotNull(deserializedLayer);
+
+        assert2dArrayEquals(
+            denseLayer.getWeights().getData(),
+            deserializedLayer.getWeights().getData(),
+            0.0001
+        );
+        assert2dArrayEquals(
+            denseLayer.getBiases().getData(),
+            deserializedLayer.getBiases().getData(),
+            0.0001
+        );
+    }
+
+    @Test
+    public void testSerializationRoundTrip() {
+        JSONObject json = denseLayer.toJson();
+        DenseLayer deserializedLayer = DenseLayer.fromJson(json);
+        assertNotNull(deserializedLayer);
+
+        assert2dArrayEquals(
+            denseLayer.getWeights().getData(),
+            deserializedLayer.getWeights().getData(),
+            0.0001
+        );
+        assert2dArrayEquals(
+            denseLayer.getBiases().getData(),
+            deserializedLayer.getBiases().getData(),
+            0.0001
+        );
+    }
+
+    // Helper method
+    private static void assert2dArrayEquals(double[][] expected, double[][] actual, double delta) {
+        assertEquals(expected.length, actual.length, "Row count mismatch");
+        for (int i = 0; i < expected.length; i++) {
+            assertArrayEquals(expected[i], actual[i], delta, "Mismatch at row " + i);
+        }
     }
 }

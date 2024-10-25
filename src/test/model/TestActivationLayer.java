@@ -1,6 +1,8 @@
 package model;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -79,5 +81,35 @@ public class TestActivationLayer {
         assertThrows(IllegalArgumentException.class, () -> {
             activationLayer.updateParameters(null);
         });
+    }
+
+    @Test
+    public void testToJson() {
+        JSONObject json = activationLayer.toJson();
+        assertNotNull(json);
+        assertEquals("ActivationLayer", json.getString("type"));
+        assertEquals("relu", json.getString("activationFunction"));
+    }
+
+    @Test
+    public void testFromJson() {
+        JSONObject json = activationLayer.toJson();
+        ActivationLayer deserializedLayer = ActivationLayer.fromJson(json);
+        assertNotNull(deserializedLayer);
+        assertEquals(
+            activationLayer.getActivationFunction(),
+            deserializedLayer.getActivationFunction()
+        );
+    }
+
+    @Test
+    public void testSerializationRoundTrip() {
+        JSONObject json = activationLayer.toJson();
+        ActivationLayer deserializedLayer = ActivationLayer.fromJson(json);
+        assertNotNull(deserializedLayer);
+        assertEquals(
+            activationLayer.getActivationFunction(),
+            deserializedLayer.getActivationFunction()
+        );
     }
 }
