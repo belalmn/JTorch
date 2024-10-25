@@ -1,7 +1,14 @@
 package ui;
 
 import model.*;
+import persistence.JsonReader;
+import persistence.JsonWriter;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
+
+import org.json.JSONObject;
 
 // Represents the console application for managing a neural network. 
 public class NeuralNetworkApp implements TrainingListener {
@@ -11,7 +18,7 @@ public class NeuralNetworkApp implements TrainingListener {
     private Optimizer optimizer;
     private Map<String, Tensor> tensors;
 
-    // initializes the application
+    // EFFECTS: initializes the application
     public NeuralNetworkApp() {
         scanner = new Scanner(System.in);
         neuralNetwork = new NeuralNetwork();
@@ -19,7 +26,7 @@ public class NeuralNetworkApp implements TrainingListener {
         tensors = new HashMap<>();
     }
 
-    // runs the application loop
+    // EFFECTS: runs the application loop
     @SuppressWarnings("methodlength")
     public void run() {
         boolean running = true;
@@ -46,6 +53,24 @@ public class NeuralNetworkApp implements TrainingListener {
                     viewArchitecture();
                     break;
                 case 7:
+                    saveTensor();
+                    break;
+                case 8:
+                    loadTensor();
+                    break;
+                case 9:
+                    saveOptimizer();
+                    break;
+                case 10:
+                    loadOptimizer();
+                    break;
+                case 11:
+                    saveNeuralNetwork();
+                    break;
+                case 12:
+                    loadNeuralNetwork();
+                    break;
+                case 13:
                     running = false;
                     exitApplication();
                     break;
@@ -55,13 +80,13 @@ public class NeuralNetworkApp implements TrainingListener {
         }
     }
 
-    // prints the loss per epoch
+    // EFFECTS: prints the loss per epoch
     @Override
     public void onEpochEnd(int epoch, int totalEpochs, double loss) {
         System.out.println("Epoch " + epoch + "/" + totalEpochs + " - Loss: " + loss);
     }
 
-    // displays the main menu
+    // EFFECTS: displays the main menu
     private void displayMenu() {
         System.out.println("\nNeural Network Application Menu:");
         System.out.println("1. Create a tensor");
@@ -70,10 +95,17 @@ public class NeuralNetworkApp implements TrainingListener {
         System.out.println("4. Choose optimizer");
         System.out.println("5. Train the neural network");
         System.out.println("6. View neural network architecture");
-        System.out.println("7. Exit");
+        System.out.println("7. Save a tensor");
+        System.out.println("8. Load a tensor");
+        System.out.println("9. Save the optimizer");
+        System.out.println("10. Load an optimizer");
+        System.out.println("11. Save the neural network");
+        System.out.println("12. Load a neural network");
+        System.out.println("13. Exit");
     }
 
-    // allows the user to create a tensor
+    // MODIFIES: this
+    // EFFECTS: allows the user to create a tensor
     @SuppressWarnings("methodlength")
     private void createTensor() {
         String tensorName = getStringInput("Enter a name for the tensor: ");
@@ -111,7 +143,8 @@ public class NeuralNetworkApp implements TrainingListener {
         }
     }
 
-    // allows the user to perform addition or multiplication on tensors
+    // MODIFIES: this
+    // EFFECTS: allows the user to perform addition or multiplication on tensors
     @SuppressWarnings("methodlength")
     private void performTensorOperations() {
         if (tensors.isEmpty()) {
@@ -150,7 +183,8 @@ public class NeuralNetworkApp implements TrainingListener {
         }
     }
 
-    // allows the user to add a layer to the neural network
+    // MODIFIES: this
+    // EFFECTS: allows the user to add a layer to the neural network
     @SuppressWarnings("methodlength")
     private void addLayer() {
         System.out.println("Choose layer type to add:");
@@ -181,7 +215,8 @@ public class NeuralNetworkApp implements TrainingListener {
         }
     }
 
-    // allows the user to choose and configure an optimizer
+    // MODIFIES: this
+    // EFFECTS: allows the user to choose and configure an optimizer
     private void chooseOptimizer() {
         System.out.println("Choose optimizer:");
         System.out.println("1. Stochastic Gradient Descent (SGD)");
@@ -199,7 +234,8 @@ public class NeuralNetworkApp implements TrainingListener {
         }
     }
 
-    // allows the user to train the neural network
+    // MODIFIES: this
+    // EFFECTS: allows the user to train the neural network
     @SuppressWarnings("methodlength")
     private void trainNetwork() {
         if (optimizer == null) {
@@ -242,20 +278,128 @@ public class NeuralNetworkApp implements TrainingListener {
         }
     }
 
-    // displays the neural network's architecture
+    // EFFECTS: displays the neural network's architecture
     private void viewArchitecture() {
         String architecture = neuralNetwork.getArchitecture();
         System.out.println("Neural Network Architecture:");
         System.out.println(architecture);
     }
 
-    // exits the application
+    // EFFECTS: saves tensor to JSON file
+    private void saveTensor() {
+        if (tensors.isEmpty()) {
+            System.out.println("No tensors available to save.");
+            return;
+        }
+        System.out.println("Available tensors:");
+        for (String name : tensors.keySet()) {
+            System.out.println("- " + name);
+        }
+        String tensorName = getStringInput("Enter the name of the tensor to save: ");
+        if (!tensors.containsKey(tensorName)) {
+            System.out.println("Tensor not found.");
+            return;
+        }
+        String filename = getStringInput("Enter filename to save the tensor: ");
+        JsonWriter jsonWriter = new JsonWriter(filename);
+        try {
+            jsonWriter.open();
+            jsonWriter.write(tensors.get(tensorName));
+            jsonWriter.close();
+            System.out.println("Tensor '" + tensorName + "' saved to " + filename);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + filename);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads tensor from JSON file
+    private void loadTensor() {
+        String tensorName = getStringInput("Enter a name for the tensor: ");
+        String filename = getStringInput("Enter filename to load the tensor from: ");
+        JsonReader jsonReader = new JsonReader(filename);
+        try {
+            JSONObject json = jsonReader.readJson();
+            Tensor tensor = Tensor.fromJson(json);
+            tensors.put(tensorName, tensor);
+            System.out.println("Tensor '" + tensorName + "' loaded from " + filename);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + filename);
+        }
+    }
+
+    // EFFECTS: saves tensor to JSON file
+    private void saveOptimizer() {
+        if (optimizer == null) {
+            System.out.println("No optimizer to save. Please choose an optimizer first.");
+            return;
+        }
+        String filename = getStringInput("Enter filename to save the optimizer: ");
+        JsonWriter jsonWriter = new JsonWriter(filename);
+        try {
+            jsonWriter.open();
+            jsonWriter.write(optimizer);
+            jsonWriter.close();
+            System.out.println("Optimizer saved to " + filename);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + filename);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads optimizer from JSON file
+    private void loadOptimizer() {
+        String filename = getStringInput("Enter filename to load the optimizer from: ");
+        JsonReader jsonReader = new JsonReader(filename);
+        try {
+            JSONObject json = jsonReader.readJson();
+            String type = json.getString("type");
+            if (type.equals("SgdOptimizer")) {
+                optimizer = SgdOptimizer.fromJson(json);
+                System.out.println("SGD optimizer loaded from " + filename);
+            } else {
+                System.out.println("Unknown optimizer type: " + type);
+            }
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + filename);
+        }
+    }
+
+    // EFFECTS: saves neural network to JSON file
+    private void saveNeuralNetwork() {
+        String filename = getStringInput("Enter filename to save the neural network: ");
+        JsonWriter jsonWriter = new JsonWriter(filename);
+        try {
+            jsonWriter.open();
+            jsonWriter.write(neuralNetwork);
+            jsonWriter.close();
+            System.out.println("Neural network saved to " + filename);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + filename);
+        }
+    }
+    
+    // MODIFIES: this
+    // EFFECTS: loads neural network from JSON file
+    private void loadNeuralNetwork() {
+        String filename = getStringInput("Enter filename to load the neural network: ");
+        JsonReader jsonReader = new JsonReader(filename);
+        try {
+            JSONObject json = jsonReader.readJson();
+            neuralNetwork = NeuralNetwork.fromJson(json);
+            System.out.println("Neural network loaded from " + filename);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + filename);
+        }
+    }
+
+    // EFFECTS: exits the application
     private void exitApplication() {
         System.out.println("Exiting the application. Goodbye!");
         scanner.close();
     }
 
-    // prompts the user for an integer input and returns it
+    // EFFECTS: prompts the user for an integer input and returns it
     private int getIntegerInput(String prompt) {
         while (true) {
             System.out.print(prompt);
@@ -269,7 +413,7 @@ public class NeuralNetworkApp implements TrainingListener {
         }
     }
 
-    // prompts the user for a double input and returns it
+    // EFFECTS: prompts the user for a double input and returns it
     private double getDoubleInput(String prompt) {
         while (true) {
             System.out.print(prompt);
@@ -283,7 +427,7 @@ public class NeuralNetworkApp implements TrainingListener {
         }
     }
 
-    // prompts the user for a string input and returns it
+    // EFFECTS: prompts the user for a string input and returns it
     private String getStringInput(String prompt) {
         System.out.print(prompt);
         return scanner.nextLine().trim();
