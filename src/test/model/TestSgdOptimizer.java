@@ -1,6 +1,8 @@
 package model;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -72,6 +74,38 @@ public class TestSgdOptimizer {
         assertThrows(IllegalArgumentException.class, () -> {
             optimizer.updateParameters(null);
         });
+    }
+
+    @Test
+    public void testToJson() {
+        JSONObject json = optimizer.toJson();
+        assertNotNull(json);
+        assertEquals("SgdOptimizer", json.getString("type"));
+        assertEquals(0.01, json.getDouble("learningRate"), 0.0001);
+    }
+
+    @Test
+    public void testFromJson() {
+        JSONObject json = optimizer.toJson();
+        SgdOptimizer deserializedOptimizer = SgdOptimizer.fromJson(json);
+        assertNotNull(deserializedOptimizer);
+        assertEquals(
+            optimizer.getLearningRate(),
+            deserializedOptimizer.getLearningRate(),
+            0.0001
+        );
+    }
+
+    @Test
+    public void testSerializationRoundTrip() {
+        JSONObject json = optimizer.toJson();
+        SgdOptimizer deserializedOptimizer = SgdOptimizer.fromJson(json);
+        assertNotNull(deserializedOptimizer);
+        assertEquals(
+            optimizer.getLearningRate(),
+            deserializedOptimizer.getLearningRate(),
+            0.0001
+        );
     }
 
     // Helper method to compare two 2D arrays
