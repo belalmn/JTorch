@@ -25,3 +25,7 @@ I am an aspiring Machine Learning Engineer and Research Scientist, with growing 
 - As a user, I want to choose the optimization algorithm (e.g., SGD) for training my neural network to improve learning efficiency.
 
 - As a user, I want to view the neural network’s architecture, including the layers and their connections, to understand the structure of my model.
+
+- As a user, I want to have the option to save my neural network's architecture, weights, and biases after training.
+
+- As a user, I want to be able to load my neural network's architecture, weights, and biases.
