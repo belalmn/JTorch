@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class TestSGDOptimizer {
+public class TestSgdOptimizer {
     private SgdOptimizer optimizer;
     private DenseLayer layer;
     private Tensor inputTensor;
@@ -76,11 +76,17 @@ public class TestSGDOptimizer {
 
     // Helper method to compare two 2D arrays
     private boolean arraysEqual(double[][] a, double[][] b) {
-        if (a.length != b.length) return false;
+        if (a.length != b.length) {
+            return false;
+        }
         for (int i = 0; i < a.length; i++) {
-            if (a[i].length != b[i].length) return false;
+            if (a[i].length != b[i].length) {
+                return false;
+            }
             for (int j = 0; j < a[i].length; j++) {
-                if (a[i][j] != b[i][j]) return false;
+                if (a[i][j] != b[i][j]) {
+                    return false;
+                }
             }
         }
         return true;

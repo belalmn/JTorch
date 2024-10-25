@@ -20,6 +20,7 @@ public class NeuralNetworkApp implements TrainingListener {
     }
 
     // runs the application loop
+    @SuppressWarnings("methodlength")
     public void run() {
         boolean running = true;
         while (running) {
@@ -73,6 +74,7 @@ public class NeuralNetworkApp implements TrainingListener {
     }
 
     // allows the user to create a tensor
+    @SuppressWarnings("methodlength")
     private void createTensor() {
         String tensorName = getStringInput("Enter a name for the tensor: ");
         System.out.println("Enter the number of rows: ");
@@ -110,6 +112,7 @@ public class NeuralNetworkApp implements TrainingListener {
     }
 
     // allows the user to perform addition or multiplication on tensors
+    @SuppressWarnings("methodlength")
     private void performTensorOperations() {
         if (tensors.isEmpty()) {
             System.out.println("No tensors available. Please create tensors first.");
@@ -148,6 +151,7 @@ public class NeuralNetworkApp implements TrainingListener {
     }
 
     // allows the user to add a layer to the neural network
+    @SuppressWarnings("methodlength")
     private void addLayer() {
         System.out.println("Choose layer type to add:");
         System.out.println("1. Dense Layer");
@@ -196,6 +200,7 @@ public class NeuralNetworkApp implements TrainingListener {
     }
 
     // allows the user to train the neural network
+    @SuppressWarnings("methodlength")
     private void trainNetwork() {
         if (optimizer == null) {
             System.out.println("Please choose an optimizer before training.");
