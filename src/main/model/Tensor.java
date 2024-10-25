@@ -1,7 +1,12 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import persistence.Writable;
+
 // Represents a multi-dimensional array of numbers used in neural networks.
-public class Tensor {
+public class Tensor implements Writable {
 
     private double[][] data;
 
@@ -67,5 +72,35 @@ public class Tensor {
             System.arraycopy(data[i], 0, copyData[i], 0, cols);
         }
         return copyData;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        JSONArray dataArray = new JSONArray();
+        for (double[] row : data) {
+            JSONArray rowArray = new JSONArray();
+            for (double val : row) {
+                rowArray.put(val);
+            }
+            dataArray.put(rowArray);
+        }
+        json.put("data", dataArray);
+        return json;
+    }
+
+    // EFFECTS: Construct a Tensor from a JSONObject
+    public static Tensor fromJson(JSONObject json) {
+        JSONArray dataArray = json.getJSONArray("data");
+        int rows = dataArray.length();
+        int cols = dataArray.getJSONArray(0).length();
+        double[][] data = new double[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            JSONArray rowArray = dataArray.getJSONArray(i);
+            for (int j = 0; j < cols; j++) {
+                data[i][j] = rowArray.getDouble(j);
+            }
+        }
+        return new Tensor(data);
     }
 }
