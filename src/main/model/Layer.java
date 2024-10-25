@@ -1,7 +1,9 @@
 package model;
 
+import persistence.Writable;
+
 // Represents a layer in a neural network.
-public abstract class Layer {
+public abstract class Layer implements Writable {
 
     // MODIFIES: this
     // EFFECTS: processes the input tensor and returns the output tensor;

@@ -1,5 +1,7 @@
 package model;
 
+import org.json.JSONObject;
+
 // Represents an activation layer in a neural network.
 public class ActivationLayer extends Layer {
 
@@ -80,5 +82,19 @@ public class ActivationLayer extends Layer {
 
     public String getActivationFunction() {
         return activationFunction;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("type", "ActivationLayer");
+        json.put("activationFunction", activationFunction);
+        return json;
+    }
+
+    // EFFECTS: Construct ActivationLayer from a JSONObject
+    public static ActivationLayer fromJson(JSONObject json) {
+        String activationFunction = json.getString("activationFunction");
+        return new ActivationLayer(activationFunction);
     }
 }

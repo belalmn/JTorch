@@ -2,6 +2,8 @@ package model;
 
 import java.util.Random;
 
+import org.json.JSONObject;
+
 // Represents a fully connected (dense) layer in a neural network.
 public class DenseLayer extends Layer {
 
@@ -19,6 +21,16 @@ public class DenseLayer extends Layer {
         }
         this.weights = initializeRandomTensor(inputSize, outputSize);
         this.biases = initializeRandomTensor(1, outputSize);
+    }
+
+    // EFFECTS: initializes weights and biases to given Tensor values;
+    // throws IllegalArgumentException if weights and biases Tensors are null.
+    public DenseLayer(Tensor weights, Tensor biases) {
+        if (weights == null || biases == null) {
+            throw new IllegalArgumentException("Weights and biases cannot be null");
+        }
+        this.weights = weights;
+        this.biases = biases;
     }
 
     // MODIFIES: this
@@ -160,5 +172,21 @@ public class DenseLayer extends Layer {
 
     public void setBiases(Tensor biases) {
         this.biases = biases;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("type", "DenseLayer");
+        json.put("weights", weights.toJson());
+        json.put("biases", biases.toJson());
+        return json;
+    }
+
+    // EFFECTS: Construct DenseLayer from a JSONObject
+    public static DenseLayer fromJson(JSONObject json) {
+        Tensor weights = Tensor.fromJson(json.getJSONObject("weights"));
+        Tensor biases = Tensor.fromJson(json.getJSONObject("biases"));
+        return new DenseLayer(weights, biases);
     }
 }
