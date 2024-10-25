@@ -1,6 +1,8 @@
 package model;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -75,5 +77,36 @@ public class TestTensor {
         assertThrows(IllegalArgumentException.class, () -> {
             tensor1.multiply(tensor3);
         });
+    }
+
+    @Test
+    public void testToJson() {
+        JSONObject json = tensor1.toJson();
+        assertNotNull(json);
+        assertTrue(json.has("data"));
+    }
+
+    @Test
+    public void testFromJson() {
+        JSONObject json = tensor1.toJson();
+        Tensor deserializedTensor = Tensor.fromJson(json);
+        assertNotNull(deserializedTensor);
+        assert2dArrayEquals(tensor1.getData(), deserializedTensor.getData(), 0.0001);
+    }
+
+    @Test
+    public void testSerializationRoundTrip() {
+        JSONObject json = tensor1.toJson();
+        Tensor deserializedTensor = Tensor.fromJson(json);
+        assertNotNull(deserializedTensor);
+        assert2dArrayEquals(tensor1.getData(), deserializedTensor.getData(), 0.0001);
+    }
+
+    // Helper method to compare 2D arrays
+    private static void assert2dArrayEquals(double[][] expected, double[][] actual, double delta) {
+        assertEquals(expected.length, actual.length, "Row count mismatch");
+        for (int i = 0; i < expected.length; i++) {
+            assertArrayEquals(expected[i], actual[i], delta, "Mismatch at row " + i);
+        }
     }
 }
