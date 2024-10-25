@@ -1,6 +1,8 @@
 package model;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -128,5 +130,105 @@ public class TestNeuralNetwork {
         assertNotNull(architecture);
         assertTrue(architecture.contains("DenseLayer"));
         assertTrue(architecture.contains("ActivationLayer"));
+    }
+
+    @Test
+    public void testToJson() {
+        JSONObject json = network.toJson();
+        assertNotNull(json);
+        assertTrue(json.has("layers"));
+        assertEquals(3, json.getJSONArray("layers").length());
+    }
+
+    @Test
+    public void testFromJson() {
+        JSONObject json = network.toJson();
+        NeuralNetwork deserializedNetwork = NeuralNetwork.fromJson(json);
+        assertNotNull(deserializedNetwork);
+
+        List<Layer> originalLayers = network.getLayers();
+        List<Layer> deserializedLayers = deserializedNetwork.getLayers();
+        assertEquals(originalLayers.size(), deserializedLayers.size());
+
+        // Compare each layer
+        for (int i = 0; i < originalLayers.size(); i++) {
+            Layer originalLayer = originalLayers.get(i);
+            Layer deserializedLayer = deserializedLayers.get(i);
+            assertEquals(
+                originalLayer.getClass(),
+                deserializedLayer.getClass()
+            );
+            if (originalLayer instanceof DenseLayer) {
+                DenseLayer originalDense = (DenseLayer) originalLayer;
+                DenseLayer deserializedDense = (DenseLayer) deserializedLayer;
+                assert2dArrayEquals(
+                    originalDense.getWeights().getData(),
+                    deserializedDense.getWeights().getData(),
+                    0.0001
+                );
+                assert2dArrayEquals(
+                    originalDense.getBiases().getData(),
+                    deserializedDense.getBiases().getData(),
+                    0.0001
+                );
+            } else if (originalLayer instanceof ActivationLayer) {
+                ActivationLayer originalActivation = (ActivationLayer) originalLayer;
+                ActivationLayer deserializedActivation = (ActivationLayer) deserializedLayer;
+                assertEquals(
+                    originalActivation.getActivationFunction(),
+                    deserializedActivation.getActivationFunction()
+                );
+            }
+        }
+    }
+
+    @Test
+    public void testSerializationRoundTrip() {
+        JSONObject json = network.toJson();
+        NeuralNetwork deserializedNetwork = NeuralNetwork.fromJson(json);
+        assertNotNull(deserializedNetwork);
+
+        List<Layer> originalLayers = network.getLayers();
+        List<Layer> deserializedLayers = deserializedNetwork.getLayers();
+        assertEquals(originalLayers.size(), deserializedLayers.size());
+
+        // Comparing each layer
+        for (int i = 0; i < originalLayers.size(); i++) {
+            Layer originalLayer = originalLayers.get(i);
+            Layer deserializedLayer = deserializedLayers.get(i);
+            assertEquals(
+                originalLayer.getClass(),
+                deserializedLayer.getClass()
+            );
+            if (originalLayer instanceof DenseLayer) {
+                DenseLayer originalDense = (DenseLayer) originalLayer;
+                DenseLayer deserializedDense = (DenseLayer) deserializedLayer;
+                assert2dArrayEquals(
+                    originalDense.getWeights().getData(),
+                    deserializedDense.getWeights().getData(),
+                    0.0001
+                );
+                assert2dArrayEquals(
+                    originalDense.getBiases().getData(),
+                    deserializedDense.getBiases().getData(),
+                    0.0001
+                );
+            } else if (originalLayer instanceof ActivationLayer) {
+                ActivationLayer originalActivation = (ActivationLayer) originalLayer;
+                ActivationLayer deserializedActivation = (ActivationLayer) deserializedLayer;
+                assertEquals(
+                    originalActivation.getActivationFunction(),
+                    deserializedActivation.getActivationFunction()
+                );
+            }
+        }
+    }
+
+    // Helper method
+    private static void assert2dArrayEquals(double[][] expected, double[][] actual, double delta) {
+        assertEquals(expected.length, actual.length, "Row count mismatch");
+        for (int i = 0; i < expected.length; i++) {
+            assertArrayEquals(expected[i], actual[i], delta, "Mismatch at row " + i);
+        }
     }
 }
