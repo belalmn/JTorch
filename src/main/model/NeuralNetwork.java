@@ -1,10 +1,16 @@
 package model;
 
 import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import persistence.Writable;
+
 import java.util.ArrayList;
 
 // Represents a neural network composed of multiple layers.
-public class NeuralNetwork {
+public class NeuralNetwork implements Writable {
 
     private List<Layer> layers;
     private TrainingListener trainingListener;
@@ -121,5 +127,36 @@ public class NeuralNetwork {
     // Getter for the list of layers (added for testing purposes)
     public List<Layer> getLayers() {
         return layers;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        JSONArray layersArray = new JSONArray();
+        for (Layer layer : layers) {
+            layersArray.put(layer.toJson());
+        }
+        json.put("layers", layersArray);
+        return json;
+    }
+
+    // EFFECTS: Construct NeuralNetwork from a JSONObject
+    public static NeuralNetwork fromJson(JSONObject json) {
+        NeuralNetwork nn = new NeuralNetwork();
+        JSONArray layersArray = json.getJSONArray("layers");
+        for (int i = 0; i < layersArray.length(); i++) {
+            JSONObject layerJson = layersArray.getJSONObject(i);
+            String type = layerJson.getString("type");
+            Layer layer = null;
+            if (type.equals("DenseLayer")) {
+                layer = DenseLayer.fromJson(layerJson);
+            } else if (type.equals("ActivationLayer")) {
+                layer = ActivationLayer.fromJson(layerJson);
+            }
+            if (layer != null) {
+                nn.addLayer(layer);
+            }
+        }
+        return nn;
     }
 }
