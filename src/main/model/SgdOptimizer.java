@@ -1,5 +1,7 @@
 package model;
 
+import org.json.JSONObject;
+
 // Implements the stochastic gradient descent (SGD) optimization algorithm.
 public class SgdOptimizer extends Optimizer {
 
@@ -47,10 +49,6 @@ public class SgdOptimizer extends Optimizer {
         }
     }
 
-    public double getLearningRate() {
-        return learningRate;
-    }
-
     // EFFECTS: Sets learning rate;
     // throws IllegalArgumentException if learningRate is negative
     public void setLearningRate(double learningRate) {
@@ -58,5 +56,23 @@ public class SgdOptimizer extends Optimizer {
             throw new IllegalArgumentException("Learning rate must be positive");
         }
         this.learningRate = learningRate;
+    }
+
+    public double getLearningRate() {
+        return learningRate;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("type", "SgdOptimizer");
+        json.put("learningRate", learningRate);
+        return json;
+    }
+
+    // EFFECTS: Construct an SgdOptimizer from a JSONObject
+    public static SgdOptimizer fromJson(JSONObject json) {
+        double learningRate = json.getDouble("learningRate");
+        return new SgdOptimizer(learningRate);
     }
 }
