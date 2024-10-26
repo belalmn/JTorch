@@ -84,7 +84,7 @@ public class TestActivationLayer {
     }
 
     @Test
-    public void testToJson() {
+    void testToJson() {
         JSONObject json = activationLayer.toJson();
         assertNotNull(json);
         assertEquals("ActivationLayer", json.getString("type"));
@@ -92,7 +92,7 @@ public class TestActivationLayer {
     }
 
     @Test
-    public void testFromJson() {
+    void testFromJson() {
         JSONObject json = activationLayer.toJson();
         ActivationLayer deserializedLayer = ActivationLayer.fromJson(json);
         assertNotNull(deserializedLayer);
@@ -103,7 +103,7 @@ public class TestActivationLayer {
     }
 
     @Test
-    public void testSerializationRoundTrip() {
+    void testSerializationRoundTrip() {
         JSONObject json = activationLayer.toJson();
         ActivationLayer deserializedLayer = ActivationLayer.fromJson(json);
         assertNotNull(deserializedLayer);
@@ -111,5 +111,53 @@ public class TestActivationLayer {
             activationLayer.getActivationFunction(),
             deserializedLayer.getActivationFunction()
         );
+    }
+
+    @Test
+    void testForwardSigmoid() {
+        activationLayer = new ActivationLayer("sigmoid");
+        double[][] inputData = {{-1.0, 0.0, 1.0}};
+        inputTensor = new Tensor(inputData);
+
+        outputTensor = activationLayer.forward(inputTensor);
+        assertNotNull(outputTensor);
+
+        double[][] expectedData = new double[1][3];
+        for (int i = 0; i < 3; i++) {
+            double x = inputData[0][i];
+            expectedData[0][i] = 1 / (1 + Math.exp(-x));
+        }
+
+        assertArrayEquals(expectedData[0], outputTensor.getData()[0], 0.0001);
+    }
+
+    @Test
+    void testBackwardSigmoid() {
+        activationLayer = new ActivationLayer("sigmoid");
+        double[][] inputData = {{-1.0, 0.0, 1.0}};
+        inputTensor = new Tensor(inputData);
+        activationLayer.forward(inputTensor); // Forward pass to set inputData in activationLayer
+
+        double[][] gradientData = {{0.1, 0.2, 0.3}};
+        Tensor gradientTensor = new Tensor(gradientData);
+
+        Tensor inputGradient = activationLayer.backward(gradientTensor);
+        assertNotNull(inputGradient);
+
+        double[][] expectedInputGradient = new double[1][3];
+        for (int i = 0; i < 3; i++) {
+            double x = inputData[0][i];
+            double sigmoid = 1 / (1 + Math.exp(-x));
+            double derivative = sigmoid * (1 - sigmoid);
+            expectedInputGradient[0][i] = gradientData[0][i] * derivative;
+        }
+
+        assertArrayEquals(expectedInputGradient[0], inputGradient.getData()[0], 0.0001);
+    }
+
+    @Test
+    void testConstructorWithSigmoid() {
+        activationLayer = new ActivationLayer("sigmoid");
+        assertEquals("sigmoid", activationLayer.getActivationFunction());
     }
 }

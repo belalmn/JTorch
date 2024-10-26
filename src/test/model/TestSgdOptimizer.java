@@ -125,4 +125,21 @@ public class TestSgdOptimizer {
         }
         return true;
     }
+
+    @Test
+    void testSetLearningRateValid() {
+        optimizer.setLearningRate(0.05);
+        assertEquals(0.05, optimizer.getLearningRate(), 0.0001);
+    }
+
+    @Test
+    void testSetLearningRateInvalid() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            optimizer.setLearningRate(0);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            optimizer.setLearningRate(-0.01);
+        });
+    }
 }
