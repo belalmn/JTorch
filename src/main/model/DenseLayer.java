@@ -135,6 +135,11 @@ public class DenseLayer extends Layer {
         optimizer.updateParameters(this);
     }
 
+    // EFFECTS: returns a string representation of the layer
+    public String getDescription() {
+        return "Dense Layer (" + getInputSize() + " -> " + getOutputSize() + ")";
+    }
+
     // Helper method to initialize tensors with random values
     private Tensor initializeRandomTensor(int rows, int cols) {
         double[][] data = new double[rows][cols];
@@ -163,6 +168,14 @@ public class DenseLayer extends Layer {
 
     public Tensor getBiasGradients() {
         return biasGradients;
+    }
+
+    public int getInputSize() {
+        return weights.getData().length;
+    }
+
+    public int getOutputSize() {
+        return weights.getData()[0].length;
     }
 
     // Setters for weights and biases

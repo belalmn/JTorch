@@ -80,6 +80,11 @@ public class ActivationLayer extends Layer {
         }
     }
 
+    // EFFECTS: returns a string representation of the activation layer
+    public String getDescription() {
+        return "Activation Layer (" + activationFunction + ")";
+    }
+
     public String getActivationFunction() {
         return activationFunction;
     }
