@@ -160,4 +160,9 @@ public class TestActivationLayer {
         activationLayer = new ActivationLayer("sigmoid");
         assertEquals("sigmoid", activationLayer.getActivationFunction());
     }
+
+    @Test
+    void testGetDescription() {
+        assertEquals("Activation Layer (relu)", activationLayer.getDescription());
+    }
 }
