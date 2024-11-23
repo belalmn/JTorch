@@ -18,4 +18,7 @@ public abstract class Layer implements Writable {
     // EFFECTS: updates the layer's parameters using the optimizer;
     // throws IllegalArgumentException if optimizer is null
     public abstract void updateParameters(Optimizer optimizer);
+
+    // EFFECTS: returns a string representation of the layer
+    public abstract String getDescription();
 }
