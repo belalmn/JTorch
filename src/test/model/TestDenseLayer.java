@@ -140,6 +140,13 @@ public class TestDenseLayer {
         );
     }
 
+    @Test
+    void testGetDescription() {
+        String description = denseLayer.getDescription();
+        assertNotNull(description);
+        assertTrue(description.contains("Dense Layer (2 -> 3)"));
+    }
+
     // Helper method
     private static void assert2dArrayEquals(double[][] expected, double[][] actual, double delta) {
         assertEquals(expected.length, actual.length, "Row count mismatch");
