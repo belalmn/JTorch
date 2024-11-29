@@ -233,6 +233,10 @@ public class AddLayerPanel extends JPanel implements LayerChangeListener {
         // EFFECTS: Opens a dialog to view the layer details.
         private void viewLayer() {
             int row = layerTable.getSelectedRow();
+            if (row < 0) {
+                JOptionPane.showMessageDialog(null, "No layer selected for viewing.");
+                return;
+            }
             Layer layer = controller.getNeuralNetwork().getLayers().get(row);
 
             // Show layer details in a dialog
@@ -245,6 +249,10 @@ public class AddLayerPanel extends JPanel implements LayerChangeListener {
         // EFFECTS: Opens a dialog to edit the layer details.
         private void editLayer() {
             int row = layerTable.getSelectedRow();
+            if (row < 0) {
+                JOptionPane.showMessageDialog(null, "No layer selected for editing.");
+                return;
+            }
             Layer layer = controller.getNeuralNetwork().getLayers().get(row);
 
             // Open layer data in an editable dialog
@@ -256,7 +264,7 @@ public class AddLayerPanel extends JPanel implements LayerChangeListener {
                 Layer newLayer = editDialog.createLayer();
                 if (newLayer != null) {
                     // Replace the layer in the neural network
-                    controller.getNeuralNetwork().getLayers().set(row, newLayer);
+                    controller.getNeuralNetwork().updateLayer(row, newLayer);
                     layerTableModel.updateLayers();
                     JOptionPane.showMessageDialog(null, "Layer updated successfully.");
                     controller.notifyLayerListeners();
@@ -268,13 +276,17 @@ public class AddLayerPanel extends JPanel implements LayerChangeListener {
         // EFFECTS: Deletes the selected layer.
         private void deleteLayer() {
             int row = layerTable.getSelectedRow();
+            if (row < 0) {
+                JOptionPane.showMessageDialog(null, "No layer selected for deletion.");
+                return;
+            }
 
             int confirm = JOptionPane.showConfirmDialog(null,
                     "Are you sure you want to delete this layer?",
                     "Confirm Delete", JOptionPane.YES_NO_OPTION);
 
             if (confirm == JOptionPane.YES_OPTION) {
-                controller.getNeuralNetwork().getLayers().remove(row);
+                controller.getNeuralNetwork().removeLayer(row);
                 layerTableModel.updateLayers();
                 JOptionPane.showMessageDialog(null, "Layer deleted successfully.");
                 controller.notifyLayerListeners();
