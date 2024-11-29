@@ -1,6 +1,10 @@
 package ui.gui;
 
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import model.Event;
+import model.EventLog;
 
 /**
  * Main GUI class for the Neural Network application.
@@ -12,9 +16,18 @@ public class NeuralNetworkGUI extends JFrame {
     public NeuralNetworkGUI() {
         controller = new ApplicationController();
         setTitle("JTorch Neural Network Application");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setSize(1000, 700);
-        setLocationRelativeTo(null); // Center the window
+        setLocationRelativeTo(null);
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                printEventLog();
+                dispose();
+                System.exit(0);
+            }
+        });
 
         initializeComponents();
     }
@@ -33,6 +46,15 @@ public class NeuralNetworkGUI extends JFrame {
         tabbedPane.addTab("Architecture", new ArchitecturePanel(controller));
 
         add(tabbedPane);
+    }
+
+    // EFFECTS: Prints all events from the EventLog to the console
+    private void printEventLog() {
+        EventLog eventLog = EventLog.getInstance();
+        System.out.println("Event Log:");
+        for (Event event : eventLog) {
+            System.out.println(event.toString());
+        }
     }
 
     public static void main(String[] args) {
