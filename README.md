@@ -111,6 +111,7 @@ I am an aspiring Machine Learning Engineer and Research Scientist, with growing 
 ## Phase 4: Task 2
 
 ### Representative sample of events
+
 ```
     Event Log:
     Thu Nov 28 22:33:54 PST 2024
