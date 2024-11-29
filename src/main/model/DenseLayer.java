@@ -21,6 +21,8 @@ public class DenseLayer extends Layer {
         }
         this.weights = initializeRandomTensor(inputSize, outputSize);
         this.biases = initializeRandomTensor(1, outputSize);
+        EventLog.getInstance().logEvent(new Event("Dense layer initialized with input size " + inputSize
+                + " and output size " + outputSize));
     }
 
     // EFFECTS: initializes weights and biases to given Tensor values;
@@ -31,6 +33,8 @@ public class DenseLayer extends Layer {
         }
         this.weights = weights;
         this.biases = biases;
+        EventLog.getInstance().logEvent(new Event("Dense layer initialized with preloaded weights and biases. "
+                + getDescription()));
     }
 
     // MODIFIES: this
@@ -38,6 +42,7 @@ public class DenseLayer extends Layer {
     // throws IllegalArgumentException if input is null or dimensions are invalid
     public Tensor forward(Tensor input) {
         if (input == null) {
+            EventLog.getInstance().logEvent(new Event("Attempted forward pass with null input tensor in DenseLayer."));
             throw new IllegalArgumentException("Input cannot be null");
         }
         double[][] inputData = input.getData();
@@ -45,6 +50,10 @@ public class DenseLayer extends Layer {
         double[][] biasData = biases.getData();
 
         if (inputData[0].length != weightData.length) {
+            EventLog.getInstance()
+                    .logEvent(new Event("Input dimensions do not match weights in DenseLayer forward pass: "
+                            + "Input dimensions: " + inputData[0].length + ", Weight dimensions: "
+                            + weightData.length));
             throw new IllegalArgumentException("Input dimensions do not match weights");
         }
 
@@ -54,6 +63,13 @@ public class DenseLayer extends Layer {
         int outputSize = weightData[0].length;
         double[][] outputData = new double[batchSize][outputSize];
 
+        matMul(inputData, weightData, biasData, batchSize, outputSize, outputData);
+        return new Tensor(outputData);
+    }
+
+    // Helper method to compute matrix multiplication of input, weights, and biases
+    private void matMul(double[][] inputData, double[][] weightData, double[][] biasData, int batchSize,
+            int outputSize, double[][] outputData) {
         for (int i = 0; i < batchSize; i++) {
             for (int j = 0; j < outputSize; j++) {
                 double sum = biasData[0][j];
@@ -63,7 +79,6 @@ public class DenseLayer extends Layer {
                 outputData[i][j] = sum;
             }
         }
-        return new Tensor(outputData);
     }
 
     // MODIFIES: this
@@ -71,6 +86,8 @@ public class DenseLayer extends Layer {
     // throws IllegalArgumentException if gradient is null
     public Tensor backward(Tensor gradient) {
         if (gradient == null) {
+            EventLog.getInstance()
+                    .logEvent(new Event("Attempted backward pass with null gradient tensor in DenseLayer."));
             throw new IllegalArgumentException("Gradient cannot be null");
         }
         double[][] gradData = gradient.getData();
@@ -92,7 +109,7 @@ public class DenseLayer extends Layer {
 
     // Helper method to compute weight and bias gradients
     private void computeWeightAndBiasGradients(double[][] gradData, double[][] inputData,
-                                               int batchSize, int inputSize, int outputSize) {
+            int batchSize, int inputSize, int outputSize) {
         double[][] weightGradData = new double[inputSize][outputSize];
         double[][] biasGradData = new double[1][outputSize];
 
@@ -110,7 +127,7 @@ public class DenseLayer extends Layer {
 
     // Helper method to compute the gradient to pass to the previous layer
     private double[][] computePrevGradient(double[][] gradData, double[][] weightData,
-                                           int batchSize, int inputSize, int outputSize) {
+            int batchSize, int inputSize, int outputSize) {
         double[][] prevGradData = new double[batchSize][inputSize];
 
         for (int i = 0; i < batchSize; i++) {
@@ -130,6 +147,8 @@ public class DenseLayer extends Layer {
     // throws IllegalArgumentException if optimizer is null
     public void updateParameters(Optimizer optimizer) {
         if (optimizer == null) {
+            EventLog.getInstance()
+                    .logEvent(new Event("Attempted to update parameters with null optimizer in DenseLayer."));
             throw new IllegalArgumentException("Optimizer cannot be null");
         }
         optimizer.updateParameters(this);
@@ -193,6 +212,8 @@ public class DenseLayer extends Layer {
         json.put("type", "DenseLayer");
         json.put("weights", weights.toJson());
         json.put("biases", biases.toJson());
+        EventLog.getInstance().logEvent(new Event("Serialized DenseLayer to JSON with input size "
+                + weights.getData().length + " and output size " + weights.getData()[0].length));
         return json;
     }
 
@@ -200,6 +221,8 @@ public class DenseLayer extends Layer {
     public static DenseLayer fromJson(JSONObject json) {
         Tensor weights = Tensor.fromJson(json.getJSONObject("weights"));
         Tensor biases = Tensor.fromJson(json.getJSONObject("biases"));
+        EventLog.getInstance().logEvent(new Event("Deserialized DenseLayer from JSON with input size "
+                + weights.getData().length + " and output size " + weights.getData()[0].length));
         return new DenseLayer(weights, biases);
     }
 }

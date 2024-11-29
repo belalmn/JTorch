@@ -11,12 +11,14 @@ public class ActivationLayer extends Layer {
     // EFFECTS: initializes the activation layer with the specified function;
     // throws IllegalArgumentException if activationFunction is null or unsupported
     public ActivationLayer(String activationFunction) {
-        if (activationFunction == null || (
-                !activationFunction.equalsIgnoreCase("relu") 
-                && !activationFunction.equalsIgnoreCase("sigmoid"))
-            ) {
+        if (activationFunction == null || (!activationFunction.equalsIgnoreCase("relu")
+                && !activationFunction.equalsIgnoreCase("sigmoid"))) {
+            EventLog.getInstance()
+                    .logEvent(new Event("Unsupported activation function attempted: '" + activationFunction + "'"));
             throw new IllegalArgumentException("Unsupported activation function");
         }
+        EventLog.getInstance()
+                .logEvent(new Event("Initialized ActivationLayer with function '" + activationFunction + "'"));
         this.activationFunction = activationFunction.toLowerCase();
     }
 
@@ -25,6 +27,8 @@ public class ActivationLayer extends Layer {
     // throws IllegalArgumentException if input is null
     public Tensor forward(Tensor input) {
         if (input == null) {
+            EventLog.getInstance()
+                    .logEvent(new Event("Attempted forward pass with null input tensor in ActivationLayer."));
             throw new IllegalArgumentException("Input cannot be null");
         }
         this.inputCache = input; // Store input for backpropagation
@@ -45,10 +49,13 @@ public class ActivationLayer extends Layer {
         return new Tensor(outputData);
     }
 
-    // EFFECTS: computes gradient of activation function and multiplies element-wise;
+    // EFFECTS: computes gradient of activation function and multiplies
+    // element-wise;
     // throws IllegalArgumentException if gradient is null
     public Tensor backward(Tensor gradient) {
         if (gradient == null) {
+            EventLog.getInstance()
+                    .logEvent(new Event("Attempted backward pass with null gradient tensor in ActivationLayer."));
             throw new IllegalArgumentException("Gradient cannot be null");
         }
 
@@ -76,6 +83,8 @@ public class ActivationLayer extends Layer {
     // throws IllegalArgumentException if optimizer is null
     public void updateParameters(Optimizer optimizer) {
         if (optimizer == null) {
+            EventLog.getInstance()
+                    .logEvent(new Event("Attempted to update parameters with null optimizer in ActivationLayer."));
             throw new IllegalArgumentException("Optimizer cannot be null");
         }
     }
@@ -94,12 +103,16 @@ public class ActivationLayer extends Layer {
         JSONObject json = new JSONObject();
         json.put("type", "ActivationLayer");
         json.put("activationFunction", activationFunction);
+        EventLog.getInstance()
+                .logEvent(new Event("Serialized ActivationLayer to JSON with function '" + activationFunction + "'"));
         return json;
     }
 
     // EFFECTS: Construct ActivationLayer from a JSONObject
     public static ActivationLayer fromJson(JSONObject json) {
         String activationFunction = json.getString("activationFunction");
+        EventLog.getInstance().logEvent(
+                new Event("Deserialized ActivationLayer from JSON with function '" + activationFunction + "'"));
         return new ActivationLayer(activationFunction);
     }
 }
