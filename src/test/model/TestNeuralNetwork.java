@@ -46,6 +46,47 @@ public class TestNeuralNetwork {
     }
 
     @Test
+    void testUpdateLayer() {
+        Layer layer = new DenseLayer(2, 3);
+        network.updateLayer(0, layer);
+        assertEquals(layer, network.getLayers().get(0));
+    }
+
+    @Test
+    void testUpdateLayerWithNullLayer() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            network.updateLayer(0, null);
+        });
+    }
+
+    @Test
+    void testUpdateLayerWithInvalidIndex() {
+        Layer layer = new DenseLayer(2, 3);
+        assertThrows(IllegalArgumentException.class, () -> {
+            network.updateLayer(3, layer);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            network.updateLayer(-1, layer);
+        });
+    }
+
+    @Test
+    void testRemoveLayer() {
+        network.removeLayer(0);
+        assertEquals(2, network.getLayers().size());
+    }
+
+    @Test
+    void testRemoveLayerWithInvalidIndex() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            network.removeLayer(3);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            network.removeLayer(-1);
+        });
+    }
+
+    @Test
     void testPredict() {
         outputTensor = network.predict(inputTensor);
         assertNotNull(outputTensor);
