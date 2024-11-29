@@ -107,3 +107,84 @@ I am an aspiring Machine Learning Engineer and Research Scientist, with growing 
     1. In the **"Train Network"** tab, click the **"Load Optimizer"** button.
     2. Select the optimizer file you wish to load from the file dialog.
     3. The optimizer settings will be loaded into the application fields.
+
+## Phase 4: Task 2
+
+### Representative sample of events
+```
+    Event Log:
+    Thu Nov 28 22:33:54 PST 2024
+    Dense layer initialized with input size 3 and output size 2
+    Thu Nov 28 22:33:54 PST 2024
+    Added layer: Dense Layer (3 -> 2) to the network. Network now has 1 layers.
+    Thu Nov 28 22:33:59 PST 2024
+    Dense layer initialized with input size 3 and output size 3
+    Thu Nov 28 22:33:59 PST 2024
+    Updated layer at index 0 with new layer: Dense Layer (3 -> 3)
+    Thu Nov 28 22:34:06 PST 2024
+    Dense layer initialized with input size 3 and output size 2
+    Thu Nov 28 22:34:06 PST 2024
+    Updated layer at index 0 with new layer: Dense Layer (3 -> 2)
+    Thu Nov 28 22:34:35 PST 2024
+    Deserialized Tensor from JSON with dimensions 2x3
+    Thu Nov 28 22:34:35 PST 2024
+    Deserialized Tensor from JSON with dimensions 1x3
+    Thu Nov 28 22:34:35 PST 2024
+    Deserialized DenseLayer from JSON with input size 2 and output size 3
+    Thu Nov 28 22:34:35 PST 2024
+    Dense layer initialized with preloaded weights and biases. Dense Layer (2 -> 3)
+    Thu Nov 28 22:34:35 PST 2024
+    Added layer: Dense Layer (2 -> 3) to the network. Network now has 1 layers.
+    Thu Nov 28 22:34:35 PST 2024
+    Deserialized ActivationLayer from JSON with function 'sigmoid'
+    Thu Nov 28 22:34:35 PST 2024
+    Initialized ActivationLayer with function 'sigmoid'
+    Thu Nov 28 22:34:35 PST 2024
+    Added layer: Activation Layer (sigmoid) to the network. Network now has 2 layers.
+    Thu Nov 28 22:34:35 PST 2024
+    Deserialized Tensor from JSON with dimensions 3x1
+    Thu Nov 28 22:34:35 PST 2024
+    Deserialized Tensor from JSON with dimensions 1x1
+    Thu Nov 28 22:34:35 PST 2024
+    Deserialized DenseLayer from JSON with input size 3 and output size 1
+    Thu Nov 28 22:34:35 PST 2024
+    Dense layer initialized with preloaded weights and biases. Dense Layer (3 -> 1)
+    Thu Nov 28 22:34:35 PST 2024
+    Added layer: Dense Layer (3 -> 1) to the network. Network now has 3 layers.
+    Thu Nov 28 22:34:35 PST 2024
+    Deserialized ActivationLayer from JSON with function 'sigmoid'
+    Thu Nov 28 22:34:35 PST 2024
+    Initialized ActivationLayer with function 'sigmoid'
+    Thu Nov 28 22:34:35 PST 2024
+    Added layer: Activation Layer (sigmoid) to the network. Network now has 4 layers.
+    Thu Nov 28 22:34:35 PST 2024
+    Deserialized NeuralNetwork from JSON with 4 layers.
+    Thu Nov 28 22:34:52 PST 2024
+    Dense layer initialized with input size 3 and output size 2
+    Thu Nov 28 22:34:52 PST 2024
+    Updated layer at index 2 with new layer: Dense Layer (3 -> 2)
+    Thu Nov 28 22:34:57 PST 2024
+    Dense layer initialized with input size 3 and output size 1
+    Thu Nov 28 22:34:57 PST 2024
+    Updated layer at index 2 with new layer: Dense Layer (3 -> 1)
+    Thu Nov 28 22:35:17 PST 2024
+    Deserialized Tensor from JSON with dimensions 4x2
+    Thu Nov 28 22:35:27 PST 2024
+    Deserialized Tensor from JSON with dimensions 4x1
+    Thu Nov 28 22:35:42 PST 2024
+    Initialized SgdOptimizer with learning rate: 0.01
+    Thu Nov 28 22:35:42 PST 2024
+    Training started for 5 epochs with optimizer: SgdOptimizer
+    Thu Nov 28 22:35:42 PST 2024
+    Epoch 1/5 completed. Average Loss: 0.2514277657226767
+    Thu Nov 28 22:35:42 PST 2024
+    Epoch 2/5 completed. Average Loss: 0.2514174612400747
+    Thu Nov 28 22:35:42 PST 2024
+    Epoch 3/5 completed. Average Loss: 0.25140723775665985
+    Thu Nov 28 22:35:42 PST 2024
+    Epoch 4/5 completed. Average Loss: 0.2513970946325078
+    Thu Nov 28 22:35:42 PST 2024
+    Epoch 5/5 completed. Average Loss: 0.25138703123260453
+    Thu Nov 28 22:35:42 PST 2024
+    Training completed after 5 epochs.
+```
