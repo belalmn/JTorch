@@ -189,3 +189,11 @@ I am an aspiring Machine Learning Engineer and Research Scientist, with growing 
     Thu Nov 28 22:35:42 PST 2024
     Training completed after 5 epochs.
 ```
+
+## Phase 4: Task 3
+
+### Design Reflection
+
+With more time to work on the project, I would definitely begin by refactoring my Tensor code. In Deep Learning, Tensors are variable dimension matrices, which allow for the computation of more advanced data types. For instance, images with RGB data, or large quantities of data that are grouped together for batch processing. Currently, the Tensor implementation in this project consists of a 2-dimensional matrix.
+
+The initial challenge in implementing n-dimensional Tensors is that we can't easily define a double variable that can hold any number of levels. In this project, we define Tensor data as a double[][] (2 levels, representing a matrix). My idea for a future refactor would enforce shape/dimension at the calculation step (when adding, multiplying, etc) instead. Our data would be defined as a 1-dimensional array, always, and then we define a shape as another array (e.g. [1,2,3] for a Tensor with a row size of 1, a column size of 2, and a depth size of 3). By doing this, we can circumvent having to define static levels of depth to our Tensor data, and the Neural Network can handle more than what it can currently achieve. For instance, we can use our application to train a number recognition model that can work on images!
